@@ -8,8 +8,9 @@ static TextLayer *date_layer; //Current date display
 static TextLayer *inner_rect;
 static TextLayer *underline;
 
-// The layers for the background.
+// The layers for the background
 static TextLayer *background;
+static int colour_state = -1;
 
 /*
 Main_colour = Time, outer border colours
@@ -49,6 +50,7 @@ static void update_display(int minute){
   GColor main_col;
   GColor acc_col;
   int cur_min = minute;
+  // Cycles through Red -> Green -> Blue -> Indigo every 15 minutes
   if(cur_min >= 0 && cur_min < 15){
       main_col = GColorRed;
       acc_col = GColorDarkCandyAppleRed;
@@ -85,17 +87,14 @@ static void update_time(){
   if(clock_is_24h_style()){
     strftime(shadow_buffer, sizeof(shadow_buffer), "%H:%M", tick_time);
     strftime(s_buffer, sizeof(s_buffer), "%H:%M", tick_time);
-    strftime(date_buffer, sizeof(date_buffer), "%a,,, %d %b", tick_time);
+    strftime(date_buffer, sizeof(date_buffer), "%a, %d %b", tick_time);
   }else{
     strftime(shadow_buffer, sizeof(shadow_buffer), "%I:%M", tick_time);
     strftime(s_buffer, sizeof(s_buffer), "%I:%M", tick_time);
     strftime(date_buffer, sizeof(date_buffer), "%a, %d %b", tick_time);
   }
   
-  int coloured_state = -1;
-  PBL_IF_COLOR_ELSE(coloured_state = 1, coloured_state = 0);
-  
-  if(coloured_state){
+  if(colour_state){
     update_display(tick_time->tm_min);
   }
   
@@ -137,12 +136,14 @@ static void main_window_load(Window *window) {
   text_layer_set_text_alignment(s_time_layer, GTextAlignmentCenter);
   
   // Time display shadow
-  time_shadow_layer = text_layer_create(GRect(0, bounds.size.h/2 - 27 - 5, bounds.size.w + 7, 45));
-  text_layer_set_background_color(time_shadow_layer, GColorClear);
-  text_layer_set_text_color(time_shadow_layer, Accent_colour );
-  text_layer_set_text(time_shadow_layer, "00:00");
-  text_layer_set_font(time_shadow_layer, fonts_get_system_font(font));
-  text_layer_set_text_alignment(time_shadow_layer, GTextAlignmentCenter);
+  if(colour_state){
+    time_shadow_layer = text_layer_create(GRect(0, bounds.size.h/2 - 27 - 5, bounds.size.w + 7, 45));
+    text_layer_set_background_color(time_shadow_layer, GColorClear);
+    text_layer_set_text_color(time_shadow_layer, Accent_colour );
+    text_layer_set_text(time_shadow_layer, "00:00");
+    text_layer_set_font(time_shadow_layer, fonts_get_system_font(font));
+    text_layer_set_text_alignment(time_shadow_layer, GTextAlignmentCenter);
+  }
   
   // Battery
   battery_layer = text_layer_create(GRect(35, 0, 80, 50));
@@ -206,6 +207,8 @@ static void init() {
 
   // Show the Window on the watch, with animated=true
   window_stack_push(s_main_window, true);
+  
+  PBL_IF_COLOR_ELSE(colour_state = 1, colour_state = 0);
   
   // Init event handlers
   update_time();
