@@ -32,7 +32,7 @@ Date_colour = colour of the date text
 
 
 static void display_batt_attr(BatteryChargeState batt_state){
-  static char batt_status[40];
+  static char batt_status[20];
   char percent = '%';
   if(batt_state.is_charging){
     snprintf(batt_status, sizeof(batt_status), "charging..."); 
