@@ -9,4 +9,5 @@ A colour changing watchface for the Pebble Time/OG Pebble
 #To-do
 
 1) Allow for watchface configuration
+
 2) Implement weather status
