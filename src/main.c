@@ -8,7 +8,7 @@ static TextLayer *date_layer; //Current date display
 static TextLayer *inner_rect;
 static TextLayer *underline;
 
-// The layers for the background
+// The layers for the background.
 static TextLayer *background;
 
 /*
@@ -82,9 +82,15 @@ static void update_time(){
   static char s_buffer[8];
   static char shadow_buffer[8];
   static char date_buffer[16];
-  strftime(shadow_buffer, sizeof(shadow_buffer), "%I:%M", tick_time);
-  strftime(s_buffer, sizeof(s_buffer), "%I:%M", tick_time);
-  strftime(date_buffer, sizeof(date_buffer), "%a, %d %b", tick_time);
+  if(clock_is_24h_style()){
+    strftime(shadow_buffer, sizeof(shadow_buffer), "%H:%M", tick_time);
+    strftime(s_buffer, sizeof(s_buffer), "%H:%M", tick_time);
+    strftime(date_buffer, sizeof(date_buffer), "%a,,, %d %b", tick_time);
+  }else{
+    strftime(shadow_buffer, sizeof(shadow_buffer), "%I:%M", tick_time);
+    strftime(s_buffer, sizeof(s_buffer), "%I:%M", tick_time);
+    strftime(date_buffer, sizeof(date_buffer), "%a, %d %b", tick_time);
+  }
   
   int coloured_state = -1;
   PBL_IF_COLOR_ELSE(coloured_state = 1, coloured_state = 0);
@@ -135,7 +141,7 @@ static void main_window_load(Window *window) {
   text_layer_set_background_color(time_shadow_layer, GColorClear);
   text_layer_set_text_color(time_shadow_layer, Accent_colour );
   text_layer_set_text(time_shadow_layer, "00:00");
-  text_layer_set_font(time_shadow_layer, fonts_get_system_font(FONT_KEY_LECO_38_BOLD_NUMBERS));
+  text_layer_set_font(time_shadow_layer, fonts_get_system_font(font));
   text_layer_set_text_alignment(time_shadow_layer, GTextAlignmentCenter);
   
   // Battery
