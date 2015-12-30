@@ -8,7 +8,7 @@ static TextLayer *date_layer; //Current date display
 static TextLayer *inner_rect;
 static TextLayer *underline;
 
-// The layers for the background
+// The layers for the background.
 static TextLayer *background_second_half;
 
 /*
