@@ -8,8 +8,8 @@ static TextLayer *date_layer; //Current date display
 static TextLayer *inner_rect;
 static TextLayer *underline;
 
-// The layers for the background.
-static TextLayer *background_second_half;
+// The layers for the background
+static TextLayer *background;
 
 /*
 Main_colour = Time, outer border colours
@@ -63,7 +63,7 @@ static void update_display(int minute){
       acc_col = GColorIndigo;
   }
     
-  text_layer_set_background_color(background_second_half, main_col);
+  text_layer_set_background_color(background, main_col);
   text_layer_set_background_color(underline, acc_col);
   text_layer_set_text_color(s_time_layer, main_col );
   text_layer_set_text_color(time_shadow_layer, acc_col );
@@ -111,9 +111,9 @@ static void main_window_load(Window *window) {
 
   
   // Background
-  background_second_half = text_layer_create(GRect(0, 0, bounds.size.w, bounds.size.h));
+  background = text_layer_create(GRect(0, 0, bounds.size.w, bounds.size.h));
   inner_rect = text_layer_create(GRect(12, 16, bounds.size.w - 24, bounds.size.h - 32));
-  text_layer_set_background_color(background_second_half, Main_colour);
+  text_layer_set_background_color(background, Main_colour);
   text_layer_set_background_color(inner_rect, GColorWhite);
   
   // Underline bar
@@ -125,7 +125,9 @@ static void main_window_load(Window *window) {
   text_layer_set_background_color(s_time_layer, GColorClear);
   text_layer_set_text_color(s_time_layer, Main_colour );
   text_layer_set_text(s_time_layer, "00:00");
-  text_layer_set_font(s_time_layer, fonts_get_system_font(FONT_KEY_LECO_38_BOLD_NUMBERS));
+  const char* font;
+  PBL_IF_COLOR_ELSE(font = FONT_KEY_LECO_38_BOLD_NUMBERS, font = FONT_KEY_BITHAM_34_MEDIUM_NUMBERS);
+  text_layer_set_font(s_time_layer, fonts_get_system_font(font));
   text_layer_set_text_alignment(s_time_layer, GTextAlignmentCenter);
   
   // Time display shadow
@@ -153,7 +155,7 @@ static void main_window_load(Window *window) {
   
   
   // Add it as a child layer to the Window's root layer
-  layer_add_child(window_layer, text_layer_get_layer(background_second_half));
+  layer_add_child(window_layer, text_layer_get_layer(background));
   layer_add_child(window_layer, text_layer_get_layer(inner_rect));
   layer_add_child(window_layer, text_layer_get_layer(underline));
   layer_add_child(window_layer, text_layer_get_layer(time_shadow_layer));
@@ -172,7 +174,7 @@ static void main_window_unload(Window *window) {
   text_layer_destroy(s_time_layer);
   text_layer_destroy(time_shadow_layer);
   text_layer_destroy(battery_layer);
-  text_layer_destroy(background_second_half);
+  text_layer_destroy(background);
   text_layer_destroy(date_layer);
   text_layer_destroy(underline);
   text_layer_destroy(inner_rect);
