@@ -1,5 +1,5 @@
 # brighten-watchface
-A colour changing watchface for the Pebble Time/OG Pebble
+A colour changing watchface for the Pebble Time and a simple B/W for the OG Pebble
 
 #Screenshots
 ![ScreenShot](http://puu.sh/mdM2u/d9a1caa39b.png) ![ScreenShot](http://puu.sh/mdM2X/f518e10975.png)
