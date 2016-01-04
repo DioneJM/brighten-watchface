@@ -1,5 +1,4 @@
 #include <pebble.h>
-//testing :D
 static Window *s_main_window;
 static TextLayer *s_time_layer; // 12 hour time layer
 static TextLayer *time_shadow_layer;
